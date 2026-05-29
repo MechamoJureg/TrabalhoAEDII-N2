@@ -55,16 +55,31 @@ class Program
                             Arquivo.ListarAlunos(alunos);
 
                             break;
+
                         //Disciplinas
                         case 2:
 
-                            arquivo.LerDisciplina(disciplinas);
+                            for (int i = 0; i < disciplinas.Quantidade(); i++)
+                            {
+                                Console.WriteLine(disciplinas.Obter(i).Get_CodDisciplina() + " | " +
+                                                  disciplinas.Obter(i).Get_NomeDisciplina() + " | " +
+                                                  disciplinas.Obter(i).Get_NotaMinima());
+                            }
 
                             break;
+                        //Alunos da Disciplinas
                         case 3:
+                            Console.WriteLine("Disciplinas disponíveis:");
+                            for (int i = 0; i < disciplinas.Quantidade(); i++)
+                            {
+                                Console.WriteLine(disciplinas.Obter(i).Get_CodDisciplina() + " - " +
+                                                  disciplinas.Obter(i).Get_NomeDisciplina());
+                            }
 
                             Console.WriteLine("Digite o código da disciplina");
                             int code = int.Parse(Console.ReadLine()!);
+
+                            bool achouAluno = false;
 
                             for (int i = 0; i < matriculas.Quantidade(); i++)
                             {
@@ -77,22 +92,39 @@ class Program
                                         if (alunos.Obter(j).get_Matricula() == matAluno)
                                         {
                                             Console.WriteLine(alunos.Obter(j).get_Nome());
-
+                                            achouAluno = true;
                                         }
                                     }
                                 }
-
                             }
+
+                            if (!achouAluno)
+                            {
+                                Console.WriteLine("Nenhum aluno matriculado nessa disciplina.");
+                            }
+
                             break;
+
                         //disciplina do aluno
                         case 4:
 
                             Console.WriteLine("Digite o código do aluno");
-                            string name = Console.ReadLine()!;
-                            code = int.Parse(Console.ReadLine()!);
+                            string b = Console.ReadLine()!;
+                            long.TryParse(b, out long matriculaAluno);
+
+                            string nomeAluno = "Não encontrado";
+                            for (int i = 0; i < alunos.Quantidade(); i++)
+                            {
+                                if (alunos.Obter(i).get_Matricula() == matriculaAluno)
+                                {
+                                    nomeAluno = alunos.Obter(i).get_Nome();
+                                    break;
+                                }
+                            }
+
                             for (int i = 0; i < matriculas.Quantidade(); i++)
                             {
-                                if (matriculas.Obter(i).Get_Matricula_Aluno() == code)
+                                if (matriculas.Obter(i).Get_Matricula_Aluno() == matriculaAluno)
                                 {
                                     long codDisc = matriculas.Obter(i).Get_CodDisciplina();
 
@@ -109,7 +141,7 @@ class Program
 
                                             string status = media >= nmin ? "Aprovado" : "Reprovado";
 
-                                            Console.WriteLine(name + ";" + nomeD + ";" + media + ";" + status);
+                                            Console.WriteLine(nomeAluno + ";" + nomeD + ";" + media + ";" + status);
                                         }
                                     }
 
@@ -135,9 +167,10 @@ class Program
                             string name = Console.ReadLine()!;
                             Console.WriteLine("Digite a idade do aluno");
                             int idade = int.Parse(Console.ReadLine()!);
-                            if (idade < 18)
+                            if (idade < 18 || idade>100)
                             {
                                 Console.WriteLine("Este aluno não pode ser cadastrado");
+                                Console.WriteLine("Idade Inválida");
                             }
                             else
                             {
@@ -146,7 +179,8 @@ class Program
 
                                 Console.WriteLine("Aluno cadastrado com sucesso!!");
                                 Console.WriteLine(matricula + ";" + name + ";" + idade);
-                                
+                                arquivo.SalvarTudo(alunos, disciplinas, matriculas);
+
                             }
                             break;
                         case 2:
@@ -158,8 +192,9 @@ class Program
 
                             long codigoindex = Arquivo.GerarCodigo(disciplinas);
 
-                            disciplinas.Adicionar( new Disciplina(codigoindex, nameD, notamin));
+                            disciplinas.Adicionar(new Disciplina(codigoindex, nameD, notamin));
                             Console.WriteLine("Disciplina criada com sucesso");
+                            arquivo.SalvarTudo(alunos, disciplinas, matriculas);
                             Console.WriteLine($"{codigoindex};{nameD};{notamin}");
                             Console.WriteLine($"quantidade de disciplinas:{disciplinas.Quantidade()} ");
 
@@ -171,25 +206,44 @@ class Program
 
                             int resposta = 0;
                             Console.WriteLine("Selecione uma das opções abaixo");
-                            Console.WriteLine("1-Inserir o nome do aluno"); Console.Write("2-Inserir o código do aluno");
+                            Console.WriteLine("1-Inserir o nome do aluno  2-Inserir o código do aluno");
                             int.TryParse(Console.ReadLine(), out resposta);
 
                             if (resposta == 1)
                             {
+                                Console.WriteLine("Alunos cadastrados:");
+                                for (int i = 0; i < alunos.Quantidade(); i++)
+                                {
+                                    Console.WriteLine(alunos.Obter(i).get_Matricula() + " - " +
+                                                      alunos.Obter(i).get_Nome());
+                                }
                                 Console.WriteLine("Insira o nome do aluno");
                                 string nomeBusca = Console.ReadLine()!;
 
+                                int count = 0;
                                 for (int i = 0; i < alunos.Quantidade(); i++)
                                 {
-                                    if (alunos.Obter(i).get_Nome() == nomeBusca)
+                                    if (alunos.Obter(i).get_Nome().Equals(nomeBusca, StringComparison.OrdinalIgnoreCase))
                                     {
                                         matriculaAluno = alunos.Obter(i).get_Matricula();
-
+                                        count++;
                                     }
+                                }
+                                if (count > 1)
+                                {
+                                    Console.WriteLine("Mais de um aluno encontrado com esse nome. Use o código.");
+                                    matriculaAluno = -1;
                                 }
                             }
                             else
                             {
+                                Console.WriteLine("Alunos cadastrados:");
+                                for (int i = 0; i < alunos.Quantidade(); i++)
+                                {
+                                    Console.WriteLine(alunos.Obter(i).get_Matricula() + " - " +
+                                                      alunos.Obter(i).get_Nome());
+                                }
+
                                 Console.WriteLine("Digite o código do aluno");
                                 matriculaAluno = long.Parse(Console.ReadLine()!);
                             }
@@ -197,12 +251,19 @@ class Program
 
                             if (resposta == 1)
                             {
+                                Console.WriteLine("Disciplinas disponíveis:");
+                                for (int i = 0; i < disciplinas.Quantidade(); i++)
+                                {
+                                    Console.WriteLine(disciplinas.Obter(i).Get_CodDisciplina() + " - " +
+                                                      disciplinas.Obter(i).Get_NomeDisciplina());
+                                }
                                 Console.WriteLine("Insira o nome da matéria");
                                 string nomeDisc = Console.ReadLine()!;
 
                                 for (int i = 0; i < disciplinas.Quantidade(); i++)
                                 {
-                                    if (disciplinas.Obter(i).Get_NomeDisciplina() == nomeDisc)
+
+                                    if (disciplinas.Obter(i).Get_NomeDisciplina().Equals(nomeDisc, StringComparison.OrdinalIgnoreCase))
                                     {
                                         codDisciplina = disciplinas.Obter(i).Get_CodDisciplina();
 
@@ -221,8 +282,28 @@ class Program
                             }
                             else
                             {
-                                matriculas.Adicionar( new Matricula(matriculaAluno, codDisciplina, 0, 0));
-                                Console.WriteLine("Matrícula realizada com sucesso!");
+                                //Verifica se já existe antes de cadastrar
+                                bool jaExiste = false;
+                                for (int i = 0; i < matriculas.Quantidade(); i++)
+                                {
+                                    if (matriculas.Obter(i).Get_Matricula_Aluno() == matriculaAluno &&
+                                        matriculas.Obter(i).Get_CodDisciplina() == codDisciplina)
+                                    {
+                                        jaExiste = true;
+                                        break;
+                                    }
+                                }
+
+                                if (jaExiste)
+                                {
+                                    Console.WriteLine("Este aluno já está matriculado nessa disciplina!");
+                                }
+                                else
+                                {
+                                    matriculas.Adicionar(new Matricula(matriculaAluno, codDisciplina, 0, 0));
+                                    Console.WriteLine("Matrícula realizada com sucesso!");
+                                    arquivo.SalvarTudo(alunos, disciplinas, matriculas);
+                                }
                             }
                             break;
                         //
@@ -238,14 +319,21 @@ class Program
                             {
                                 Console.WriteLine("Insira o nome do aluno");
                                 string Buscarnome = Console.ReadLine()!;
+
+                                int count = 0;
                                 for (int i = 0; i < alunos.Quantidade(); i++)
                                 {
-                                    if (alunos.Obter(i).get_Nome() == Buscarnome)
+                                    if (alunos.Obter(i).get_Nome().Equals(Buscarnome, StringComparison.OrdinalIgnoreCase))
                                     {
                                         matriculaAluno = alunos.Obter(i).get_Matricula();
+                                        count++;
                                     }
                                 }
-
+                                if (count > 1)
+                                {
+                                    Console.WriteLine("Mais de um aluno encontrado com esse nome. Use o código.");
+                                    matriculaAluno = -1;
+                                }
                             }
                             else
                             {
@@ -263,7 +351,7 @@ class Program
 
                                 for (int j = 0; j < disciplinas.Quantidade(); j++)
                                 {
-                                    if (disciplinas.Obter(j).Get_NomeDisciplina() == buscarDisc)
+                                    if (disciplinas.Obter(j).Get_NomeDisciplina().Equals(buscarDisc, StringComparison.OrdinalIgnoreCase))
                                     {
                                         codDisciplina = disciplinas.Obter(j).Get_CodDisciplina();
                                     }
@@ -294,11 +382,21 @@ class Program
 
                                         Console.WriteLine("Digite a nota 2:");
                                         float n2 = float.Parse(Console.ReadLine()!);
+                                        
+                                        
+                                        //Verificação para que não registre notas menores que 0 ou maiores que 10
+                                        if (n1 < 0 || n1 > 10 || n2 < 0 || n2 > 10)
+                                        {
+                                            Console.WriteLine("Nota inválida! As notas devem estar entre 0 e 10.");
+                                            break;
+                                        }
+                                        //
 
                                         matriculas.Obter(i).Set_Nota1(n1);
                                         matriculas.Obter(i).Set_Nota2(n2);
 
                                         Console.WriteLine("Notas atribuídas com sucesso!");
+                                        arquivo.SalvarTudo(alunos, disciplinas, matriculas);
                                         encontrou = true;
                                         break;
                                     }
@@ -315,11 +413,11 @@ class Program
                     break;
 
                 case 3:
-                    arquivo.SalvarTudo(alunos, disciplinas,matriculas);
+                    arquivo.SalvarTudo(alunos, disciplinas, matriculas);
                     break;
                 case 4:
                     Console.WriteLine("Volte sempre");
-                    arquivo.SalvarTudo(alunos, disciplinas,matriculas);
+                    arquivo.SalvarTudo(alunos, disciplinas, matriculas);
                     break;
             }
         }

@@ -32,8 +32,8 @@ namespace TrabalhoAEDII_N2
             }
             else
             {
+                novo.Ante = fim;
                 fim.Prox = novo;
-                novo.Prox = fim;
                 fim = novo;
             }
             quantidade++;

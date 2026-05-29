@@ -141,7 +141,7 @@ namespace TrabalhoAEDII_N2
 
             return matricula;
         }
-        public static int GerarCodigo(ListaDupla<Disciplina> disciplinas)
+        public static long GerarCodigo(ListaDupla<Disciplina> disciplinas)
         {
             Random rnd = new Random();
             int codigo;
