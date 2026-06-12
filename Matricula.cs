@@ -4,6 +4,8 @@ using System.Text;
 
 namespace TrabalhoAEDII_N2
 {
+    // Representa o vínculo entre um aluno e uma disciplina,
+    // armazenando também as notas obtidas.
     class Matricula
     {
         private long _Matricula_Aluno;
@@ -53,6 +55,7 @@ namespace TrabalhoAEDII_N2
             _Nota2 = nota;
         }
 
+        // Calcula a média final do aluno na disciplina.
         public float Calculo_Media()
         {
             return (_Nota1 + _Nota2) / 2;

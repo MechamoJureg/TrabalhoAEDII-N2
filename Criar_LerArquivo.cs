@@ -5,8 +5,13 @@ using System.IO;
 
 namespace TrabalhoAEDII_N2
 {
+// Classe responsável pelo gerenciamento dos arquivos do sistema.
+// Realiza a criação dos arquivos, leitura dos registros
+// e gravação dos dados em disco.
     class Arquivo
     {
+        // Verifica se a pasta e os arquivos de dados existem.
+        // Caso não existam, eles são criados automaticamente.
         public void CriacaodeArquivos()
         {
             if (!Directory.Exists("Dados"))
@@ -42,7 +47,8 @@ namespace TrabalhoAEDII_N2
                 }
             }
         }
-
+        // Lê o arquivo Alunos.dat e carrega os registros
+        // para a lista duplamente encadeada de alunos.
         public void LerAlunos(ListaDupla<Aluno> alunos)
         {
             string[] linhas = File.ReadAllLines("Dados/Alunos.dat");
@@ -50,7 +56,8 @@ namespace TrabalhoAEDII_N2
             for (int i = 0; i < linhas.Length; i++)
             {
                 if (linhas[i] == "") continue;
-
+               
+                // Divide a linha utilizando ';' como separador.
                 string[] dados = linhas[i].Split(';');
 
                 if (dados.Length < 3) continue;
@@ -58,10 +65,14 @@ namespace TrabalhoAEDII_N2
                 long.TryParse(dados[0], out long matricula);
                 string nome = dados[1];
                 int.TryParse(dados[2], out int idade);
-
+                
+                // Cria o objeto Aluno e adiciona na lista.
                 alunos.Adicionar(new Aluno(matricula, nome, idade));
             }
         }
+
+        // Lê o arquivo Disciplinas.dat e carrega os registros
+        // para a lista de disciplinas do sistema.
         public void LerDisciplina(ListaDupla<Disciplina> disciplinas)
         {
             string[] linhas = File.ReadAllLines("Dados/Disciplinas.dat");
@@ -74,11 +85,16 @@ namespace TrabalhoAEDII_N2
                 int.TryParse(dados[0], out int CodDisc);
                 string Nome = dados[1];
                 float.TryParse(dados[2], out float NotaMin);
+
+                // Cria o objeto Disciplina e adiciona na lista.
                 disciplinas.Adicionar(new Disciplina(CodDisc, Nome, NotaMin));
                 Console.WriteLine(dados[0] + " | " + dados[1] + " | " + dados[2]);
 
             }
         }
+
+        // Lê o arquivo Matriculas.dat e carrega os vínculos
+        // entre alunos e disciplinas, incluindo as notas.
         public void LerMatricula(ListaDupla<Matricula> matriculas)
         {
             string[] linhas = File.ReadAllLines("Dados/Matriculas.dat");
@@ -92,13 +108,16 @@ namespace TrabalhoAEDII_N2
                 int.TryParse(dados[1], out int CodDisciplina);
                 float.TryParse(dados[2], out float Nota1);
                 float.TryParse(dados[3], out float Nota2);
+
+                // Cria o objeto Matricula e adiciona na lista.
                 matriculas.Adicionar(new Matricula(matricula, CodDisciplina, Nota1, Nota2));
                 Console.WriteLine(dados[0] + " | " + dados[1] + " | " + dados[2]);
 
             }
         }
 
-
+        // Executa a leitura de todos os arquivos do sistema,
+        // carregando alunos, disciplinas e matrículas na memória.
         public void LerArquivos(ListaDupla<Aluno> alunos, ListaDupla<Disciplina> disciplinas, ListaDupla<Matricula> matriculas)
         {
             LerAlunos(alunos);
@@ -106,6 +125,8 @@ namespace TrabalhoAEDII_N2
             LerMatricula(matriculas);
         }
 
+        // Exibe no console todos os alunos cadastrados
+        // juntamente com matrícula, nome e idade.
         public static void ListarAlunos(ListaDupla<Aluno> alunos)
         {
             for (int i = 0; i < alunos.Quantidade(); i++)
@@ -116,6 +137,9 @@ namespace TrabalhoAEDII_N2
                 Console.WriteLine("-------------------");
             }
         }
+
+        // Gera uma matrícula aleatória e garante
+        // que ela não exista na lista de alunos.
         public static int GerarMatriculaUnica(ListaDupla<Aluno> alunos)
         {
             Random rnd = new Random();
@@ -141,6 +165,9 @@ namespace TrabalhoAEDII_N2
 
             return matricula;
         }
+
+        // Gera um código aleatório para disciplina e garante
+        // que ele não esteja sendo utilizado por outra disciplina.
         public static long GerarCodigo(ListaDupla<Disciplina> disciplinas)
         {
             Random rnd = new Random();
@@ -152,6 +179,8 @@ namespace TrabalhoAEDII_N2
                 codigo = rnd.Next(1000, 9999);
                 existe = false;
 
+                // Percorre as disciplinas para verificar
+                // se o código gerado já está em uso.
                 for (int i = 0; i < disciplinas.Quantidade(); i++)
                 {
                     if (disciplinas.Obter(i).Get_CodDisciplina() == codigo)
@@ -165,6 +194,9 @@ namespace TrabalhoAEDII_N2
 
             return codigo;
         }
+
+        // Percorre a lista de alunos e grava os dados
+        // no arquivo Alunos.dat.
         public void SalvarAlunos(ListaDupla<Aluno> alunos)
         {
             string[] linhas = new string[alunos.Quantidade()];
@@ -179,6 +211,9 @@ namespace TrabalhoAEDII_N2
 
             File.WriteAllLines("Dados/Alunos.dat", linhas);
         }
+
+        // Percorre a lista de disciplinas e grava os dados
+        // no arquivo Disciplinas.dat.
         public void SalvarDisciplinas(ListaDupla<Disciplina> disciplinas)
         {
             string[] linhas = new string[disciplinas.Quantidade()];
@@ -193,6 +228,9 @@ namespace TrabalhoAEDII_N2
             File.WriteAllLines("Dados/Disciplinas.dat", linhas);
 
         }
+
+        // Percorre a lista de matrículas e grava os dados
+        // no arquivo Matriculas.dat.
         public void SalvarMatriculas(ListaDupla<Matricula> matriculas)
         {
             string[] linhas = new string[matriculas.Quantidade()];
@@ -209,7 +247,8 @@ namespace TrabalhoAEDII_N2
             File.WriteAllLines("Dados/Matriculas.dat", linhas);
         }
 
-
+        // Centraliza o processo de gravação,
+        // salvando todos os dados do sistema nos arquivos.
         public void SalvarTudo(ListaDupla<Aluno> alunos,
                       ListaDupla<Disciplina> disciplinas,
                       ListaDupla<Matricula> matriculas)

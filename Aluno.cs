@@ -4,10 +4,16 @@ using System.Text;
 
 namespace TrabalhoAEDII_N2
 {
+    // Representa um aluno cadastrado no sistema.
     internal class Aluno
     {
+        // Matrícula única do aluno.
         private long _Matricula;
+        
+        // Nome completo do aluno.
         private string _Nome;
+
+        // Idade do aluno.
         private int _Idade;
 
         public Aluno(long matricula, string nome, int idade)

@@ -4,10 +4,16 @@ using System.Text;
 
 namespace TrabalhoAEDII_N2
 {
+    // Representa uma disciplina oferecida pela instituição.
     class Disciplina
     {
+        // Código identificador da disciplina.
         private long Cod_Disciplina;
+
+        // Nome da disciplina.
         private string Nome_Disciplina;
+
+        // Nota mínima necessária para aprovação.
         private float Nota_Minima;
 
         public Disciplina(long coddisc, string nomedisc, float notamin)

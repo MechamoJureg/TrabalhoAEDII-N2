@@ -9,10 +9,14 @@ class Program
 
     static void Main(string[] args)
     {
+        // Estruturas principais do sistema.
+        // Armazenam os alunos, disciplinas e matrículas.
         ListaDupla<Aluno> alunos = new ListaDupla<Aluno>();
         ListaDupla<Disciplina> disciplinas = new ListaDupla<Disciplina>();
         ListaDupla<Matricula> matriculas = new ListaDupla<Matricula>();
 
+        // Inicializa os arquivos do sistema e carrega os dados
+        // persistidos em disco para as listas em memória.
         Arquivo arquivo = new Arquivo();
         arquivo.CriacaodeArquivos();
         arquivo.LerArquivos(alunos, disciplinas, matriculas);
@@ -20,6 +24,8 @@ class Program
 
 
         int option = 0;
+
+        // Menu principal do sistema.
         Console.WriteLine("                       MENU                          ");
         Console.WriteLine("_____________________________________________________");
         Console.WriteLine("|                                                   |");
@@ -27,6 +33,9 @@ class Program
         Console.WriteLine("|                                                   |");
 
 
+        
+        // Loop principal do sistema.
+        // Permanece em execução até o usuário escolher a opção Sair.
         while (option != 4)
         {
             Console.WriteLine("1-Consultas");
@@ -39,6 +48,7 @@ class Program
 
             switch (option)
             {
+                // Consultas disponíveis para o usuário.
                 case 1:
                     Console.WriteLine("Escolha uma das opções abaixo");
                     Console.WriteLine("1 - Alunos");
@@ -49,6 +59,7 @@ class Program
 
                     switch (opConsulta)
                     {
+                        
                         //Alunos
                         case 1:
 
@@ -56,7 +67,8 @@ class Program
 
                             break;
 
-                        //Disciplinas
+                        
+                            //Disciplinas
                         case 2:
 
                             for (int i = 0; i < disciplinas.Quantidade(); i++)
@@ -67,8 +79,10 @@ class Program
                             }
 
                             break;
-                        //Alunos da Disciplinas
+                        
+                            //Alunos da Disciplinas
                         case 3:
+                            
                             Console.WriteLine("Disciplinas disponíveis:");
                             for (int i = 0; i < disciplinas.Quantidade(); i++)
                             {
@@ -81,12 +95,15 @@ class Program
 
                             bool achouAluno = false;
 
+                            // Procura todas as matrículas vinculadas à disciplina informada.
+                            // Em seguida localiza os alunos correspondentes e exibe seus nomes.
                             for (int i = 0; i < matriculas.Quantidade(); i++)
                             {
                                 if (matriculas.Obter(i).Get_CodDisciplina() == code)
                                 {
                                     long matAluno = matriculas.Obter(i).Get_Matricula_Aluno();
-
+                                    
+                                    // Busca o aluno na lista através da matrícula encontrada.
                                     for (int j = 0; j < alunos.Quantidade(); j++)
                                     {
                                         if (alunos.Obter(j).get_Matricula() == matAluno)
@@ -113,6 +130,8 @@ class Program
                             long.TryParse(b, out long matriculaAluno);
 
                             string nomeAluno = "Não encontrado";
+
+                            // Recupera o nome do aluno a partir da matrícula informada.
                             for (int i = 0; i < alunos.Quantidade(); i++)
                             {
                                 if (alunos.Obter(i).get_Matricula() == matriculaAluno)
@@ -122,6 +141,7 @@ class Program
                                 }
                             }
 
+                            // Localiza todas as disciplinas em que o aluno está matriculado.
                             for (int i = 0; i < matriculas.Quantidade(); i++)
                             {
                                 if (matriculas.Obter(i).Get_Matricula_Aluno() == matriculaAluno)
@@ -137,6 +157,9 @@ class Program
 
                                             float n1 = matriculas.Obter(i).Get_Nota1();
                                             float n2 = matriculas.Obter(i).Get_Nota2();
+
+                                            // Calcula a situação do aluno na disciplina
+                                            // comparando sua média com a nota mínima exigida.
                                             float media = matriculas.Obter(i).Calculo_Media();
 
                                             string status = media >= nmin ? "Aprovado" : "Reprovado";
@@ -151,6 +174,8 @@ class Program
 
                     }
                     break;
+
+                // Funcionalidades de cadastro e atualização de dados.
                 case 2:
                     Console.WriteLine("Escolha uma das opções abaixo");
                     Console.WriteLine("1-Cadastrar Aluno");
@@ -167,6 +192,8 @@ class Program
                             string name = Console.ReadLine()!;
                             Console.WriteLine("Digite a idade do aluno");
                             int idade = int.Parse(Console.ReadLine()!);
+
+                            // Validação de idade conforme regra de negócio do sistema.
                             if (idade < 18 || idade>100)
                             {
                                 Console.WriteLine("Este aluno não pode ser cadastrado");
@@ -174,6 +201,7 @@ class Program
                             }
                             else
                             {
+                                // Gera uma matrícula única para evitar duplicidade de alunos.
                                 long matricula = Arquivo.GerarMatriculaUnica(alunos);
                                 alunos.Adicionar(new Aluno(matricula, name, idade)); ;
 
@@ -190,6 +218,7 @@ class Program
                             Console.WriteLine("Digite a nota mínima da disciplina");
                             float.TryParse(Console.ReadLine(), out float notamin);
 
+                            // Gera automaticamente um código único para a disciplina.
                             long codigoindex = Arquivo.GerarCodigo(disciplinas);
 
                             disciplinas.Adicionar(new Disciplina(codigoindex, nameD, notamin));
@@ -204,6 +233,7 @@ class Program
                         case 3:
                             long matriculaAluno = -1;
 
+                            // Permite localizar o aluno pelo nome ou pela matrícula.
                             int resposta = 0;
                             Console.WriteLine("Selecione uma das opções abaixo");
                             Console.WriteLine("1-Inserir o nome do aluno  2-Inserir o código do aluno");
@@ -275,6 +305,9 @@ class Program
                                 Console.WriteLine("Insira o código da matéria");
                                 codDisciplina = int.Parse(Console.ReadLine()!);
                             }
+
+                            // Verifica se o aluno e a disciplina foram encontrados
+                            // antes de realizar a matrícula.
                             if (matriculaAluno == -1 || codDisciplina == -1)
                             {
                                 Console.WriteLine("Aluno ou disciplina não encontrado!");
@@ -306,7 +339,8 @@ class Program
                                 }
                             }
                             break;
-                        //
+                        
+
                         case 4:
 
                             matriculaAluno = -1;
@@ -412,9 +446,13 @@ class Program
                     }
                     break;
 
+                
+                //Salva as Alterações.
                 case 3:
                     arquivo.SalvarTudo(alunos, disciplinas, matriculas);
                     break;
+
+                //Termina a execução do Programa.
                 case 4:
                     Console.WriteLine("Volte sempre");
                     arquivo.SalvarTudo(alunos, disciplinas, matriculas);
