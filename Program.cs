@@ -43,8 +43,10 @@ class Program
             Console.WriteLine("3-Salvar");
             Console.WriteLine("4-Sair");
 
+            Console.WriteLine();
             string a = Console.ReadLine()!;
             int.TryParse(a, out option);
+            Console.WriteLine();
 
             switch (option)
             {
@@ -55,7 +57,11 @@ class Program
                     Console.WriteLine("2 - Disciplinas");
                     Console.WriteLine("3 - Alunos da Disciplina");
                     Console.WriteLine("4 - Disciplinas do Aluno");
+                    
+                    Console.WriteLine();
                     int opConsulta = int.Parse(Console.ReadLine()!);
+                    Console.WriteLine();
+
 
                     switch (opConsulta)
                     {
@@ -64,6 +70,7 @@ class Program
                         case 1:
 
                             Arquivo.ListarAlunos(alunos);
+                            Console.WriteLine();
 
                             break;
 
@@ -76,7 +83,9 @@ class Program
                                 Console.WriteLine(disciplinas.Obter(i).Get_CodDisciplina() + " | " +
                                                   disciplinas.Obter(i).Get_NomeDisciplina() + " | " +
                                                   disciplinas.Obter(i).Get_NotaMinima());
+
                             }
+                                Console.WriteLine();
 
                             break;
                         
@@ -88,10 +97,14 @@ class Program
                             {
                                 Console.WriteLine(disciplinas.Obter(i).Get_CodDisciplina() + " - " +
                                                   disciplinas.Obter(i).Get_NomeDisciplina());
-                            }
 
+                            }
+                            Console.WriteLine();
                             Console.WriteLine("Digite o código da disciplina");
+                            Console.WriteLine();
                             int code = int.Parse(Console.ReadLine()!);
+                            Console.WriteLine();
+
 
                             bool achouAluno = false;
 
@@ -112,6 +125,8 @@ class Program
                                             achouAluno = true;
                                         }
                                     }
+                                    Console.WriteLine();
+
                                 }
                             }
 
@@ -165,6 +180,8 @@ class Program
                                             string status = media >= nmin ? "Aprovado" : "Reprovado";
 
                                             Console.WriteLine(nomeAluno + ";" + nomeD + ";" + media + ";" + status);
+                                            Console.WriteLine();
+
                                         }
                                     }
 
@@ -277,33 +294,58 @@ class Program
                                 Console.WriteLine("Digite o código do aluno");
                                 matriculaAluno = long.Parse(Console.ReadLine()!);
                             }
+
+                            // Permite localizar a disciplina pelo nome ou pelo código.
                             long codDisciplina = -1;
 
-                            if (resposta == 1)
+                            Console.WriteLine("Como deseja localizar a disciplina?");
+                            Console.WriteLine("1 - Nome da disciplina");
+                            Console.WriteLine("2 - Código da disciplina");
+
+                            Console.WriteLine();
+                            int opDisc = int.Parse(Console.ReadLine()!);
+                            Console.WriteLine();
+
+                            if (opDisc == 1)
                             {
                                 Console.WriteLine("Disciplinas disponíveis:");
+
                                 for (int i = 0; i < disciplinas.Quantidade(); i++)
                                 {
-                                    Console.WriteLine(disciplinas.Obter(i).Get_CodDisciplina() + " - " +
-                                                      disciplinas.Obter(i).Get_NomeDisciplina());
+                                    Console.WriteLine(
+                                        disciplinas.Obter(i).Get_CodDisciplina() + " - " +
+                                        disciplinas.Obter(i).Get_NomeDisciplina());
                                 }
-                                Console.WriteLine("Insira o nome da matéria");
+                                Console.WriteLine();
+                                Console.WriteLine("Insira o nome da disciplina:");
                                 string nomeDisc = Console.ReadLine()!;
+                                Console.WriteLine();
+
 
                                 for (int i = 0; i < disciplinas.Quantidade(); i++)
                                 {
-
-                                    if (disciplinas.Obter(i).Get_NomeDisciplina().Equals(nomeDisc, StringComparison.OrdinalIgnoreCase))
+                                    if (disciplinas.Obter(i).Get_NomeDisciplina() == nomeDisc)
                                     {
                                         codDisciplina = disciplinas.Obter(i).Get_CodDisciplina();
-
+                                        break;
                                     }
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("Insira o código da matéria");
-                                codDisciplina = int.Parse(Console.ReadLine()!);
+                                Console.WriteLine("Disciplinas disponíveis:");
+
+                                for (int i = 0; i < disciplinas.Quantidade(); i++)
+                                {
+                                    Console.WriteLine(
+                                        disciplinas.Obter(i).Get_CodDisciplina() + " - " +
+                                        disciplinas.Obter(i).Get_NomeDisciplina());
+                                }
+
+                                Console.WriteLine("Insira o código da disciplina:");
+                                Console.WriteLine();
+                                codDisciplina = long.Parse(Console.ReadLine()!);
+                                Console.WriteLine();
                             }
 
                             // Verifica se o aluno e a disciplina foram encontrados
@@ -347,12 +389,16 @@ class Program
 
                             Console.WriteLine("Insira uma das opções abaixo");
                             Console.Write("1-Inserir nome do aluno"); Console.WriteLine(" 2- inserir código do aluno");
+                            Console.WriteLine();
                             int resp1 = int.Parse(Console.ReadLine()!);
+                            Console.WriteLine();
 
                             if (resp1 == 1)
                             {
                                 Console.WriteLine("Insira o nome do aluno");
+                                Console.WriteLine();
                                 string Buscarnome = Console.ReadLine()!;
+                                Console.WriteLine();
 
                                 int count = 0;
                                 for (int i = 0; i < alunos.Quantidade(); i++)
@@ -372,16 +418,24 @@ class Program
                             else
                             {
                                 Console.WriteLine("Insira o código do aluno");
+                                Console.WriteLine();
                                 matriculaAluno = long.Parse(Console.ReadLine()!);
+                                Console.WriteLine();
+
                             }
                             Console.WriteLine("Insira uma das opções abaixo");
                             Console.Write("1-Inserir nome da Disciplina"); Console.WriteLine(" 2- inserir código da Disciplina");
+                            Console.WriteLine();
                             int resp2 = int.Parse(Console.ReadLine()!);
+                            Console.WriteLine();
+
                             codDisciplina = -1;
                             if (resp2 == 1)
                             {
                                 Console.WriteLine("Insira o nome da disciplina");
+                                Console.WriteLine();
                                 string buscarDisc = Console.ReadLine()!;
+                                Console.WriteLine();
 
                                 for (int j = 0; j < disciplinas.Quantidade(); j++)
                                 {
@@ -394,7 +448,10 @@ class Program
                             else
                             {
                                 Console.WriteLine("Insira o código da disciplina");
+                                Console.WriteLine();
                                 codDisciplina = long.Parse(Console.ReadLine()!);
+                                Console.WriteLine();
+
 
                             }
                             if (matriculaAluno == -1 || codDisciplina == -1)
@@ -413,6 +470,8 @@ class Program
                                     {
                                         Console.WriteLine("Digite a nota 1:");
                                         float n1 = float.Parse(Console.ReadLine()!);
+
+                                        Console.WriteLine();
 
                                         Console.WriteLine("Digite a nota 2:");
                                         float n2 = float.Parse(Console.ReadLine()!);
